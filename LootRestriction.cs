@@ -113,46 +113,46 @@ namespace Erenshor_LootRestriction
         //    }
         //}
 
-        [HarmonyPatch(typeof(NPC))]
-        [HarmonyPatch("Update")]
-        public static class NPCPatch
-        {
-            public static void Postfix(NPC __instance)
-            {
-                if (__instance == null)
-                    return;
+        //[HarmonyPatch(typeof(NPC))]
+        //[HarmonyPatch("Update")]
+        //public static class NPCPatch
+        //{
+        //    public static void Postfix(NPC __instance)
+        //    {
+        //        if (__instance == null)
+        //            return;
 
-                if (__instance.CheckLiving())
-                    return;
+        //        if (__instance.CheckLiving())
+        //            return;
 
-                var npcChar = __instance.GetChar();
+        //        var npcChar = __instance.GetChar();
 
-                bool playerInvolved = Character_Extension.GetExtra(npcChar);
+        //        bool playerInvolved = Character_Extension.GetExtra(npcChar);
 
-                if (playerInvolved)
-                    return;
+        //        if (playerInvolved)
+        //            return;
 
-                bool shouldDelete =
-                    (!__instance.SimPlayer ||
-                    (__instance.SimPlayer &&
-                    !__instance.ThisSim.InGroup &&
-                    !GameData.SimMngr.IsSimGrouped(GameData.SimMngr.Sims[__instance.ThisSim.myIndex])));
+        //        bool shouldDelete =
+        //            (!__instance.SimPlayer ||
+        //            (__instance.SimPlayer &&
+        //            !__instance.ThisSim.InGroup &&
+        //            !GameData.SimMngr.IsSimGrouped(GameData.SimMngr.Sims[__instance.ThisSim.myIndex])));
 
-                if (shouldDelete)
-                {
-                    if (GameData.AttackingPlayer.Contains(__instance))
-                    {
-                        GameData.AttackingPlayer.Remove(__instance);
-                    }
-                    if (GameData.GroupMatesInCombat.Contains(__instance))
-                    {
-                        GameData.GroupMatesInCombat.Remove(__instance);
-                    }
-                    CorpseDataManager.RemoveCorpseData(npcChar.savedCorpse);
-                    Object.Destroy(__instance.gameObject);
-                }
-            }
-        }
+        //        if (shouldDelete)
+        //        {
+        //            if (GameData.AttackingPlayer.Contains(__instance))
+        //            {
+        //                GameData.AttackingPlayer.Remove(__instance);
+        //            }
+        //            if (GameData.GroupMatesInCombat.Contains(__instance))
+        //            {
+        //                GameData.GroupMatesInCombat.Remove(__instance);
+        //            }
+        //            CorpseDataManager.RemoveCorpseData(npcChar.savedCorpse);
+        //            Object.Destroy(__instance.gameObject);
+        //        }
+        //    }
+        //}
 
         [HarmonyPatch(typeof(PlayerControl))]
         [HarmonyPatch("RightClick")]
