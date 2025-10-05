@@ -5,7 +5,7 @@ A mod for Erenshor that stops the player from looting enemies where the player a
 
 - The normal version of the mod stops the player from looting any corpse where the player or their party members did not contribute atleast 50% enemies Max HP as damage. (This currently only works for right-click looting, corpses can still be looted when using the loot hotkey)
 - The (Auto-Remove Corpses) version of the mod automatically removes any corpse that would be unlootable in the normal version of the mod.
-- 
+
 ## Requirements
 
 BepInEx 5 is required for this mod to work.
