@@ -15,9 +15,9 @@ namespace Erenshor_LootRestriction
     [BepInPlugin(ModGUID, ModDescription, ModVersion)]
     public class LootRestriction : BaseUnityPlugin
     {
-        internal const string ModName = "LootRestriction";
+        internal const string ModName = "LootRestriction (Auto-Remove Corpses)";
         internal const string ModVersion = "1.0.0";
-        internal const string ModDescription = "Loot Restriction";
+        internal const string ModDescription = "Loot Restriction Auto-Remove Corpses";
         internal const string Author = "Brad522";
         private const string ModGUID = Author + "." + ModName;
 
@@ -153,119 +153,5 @@ namespace Erenshor_LootRestriction
                 }
             }
         }
-
-        //[HarmonyPatch(typeof(PlayerControl))]
-        //[HarmonyPatch("RightClick")]
-        //class PlayerControlPatch
-        //{
-        //    static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
-        //    {
-        //        var matcher = new CodeMatcher(instructions, il);
-
-        //        if (matcher.MatchEndForward(
-        //            new CodeMatch(OpCodes.Callvirt),
-        //            new CodeMatch(OpCodes.Ldnull),
-        //            new CodeMatch(OpCodes.Call),
-        //            new CodeMatch(OpCodes.Brfalse),
-        //            new CodeMatch(OpCodes.Ldsfld),
-        //            new CodeMatch(OpCodes.Brtrue),
-        //            new CodeMatch(OpCodes.Ldsfld),
-        //            new CodeMatch(OpCodes.Ldfld),
-        //            new CodeMatch(OpCodes.Ldfld),
-        //            new CodeMatch(OpCodes.Callvirt),
-        //            new CodeMatch(OpCodes.Brtrue),
-        //            new CodeMatch(OpCodes.Ldloc_2)).IsValid)
-        //        {
-        //            var allowedLabel = il.DefineLabel();
-        //            matcher.Instruction.labels.Add(allowedLabel);
-
-        //            var instrs = matcher.InstructionEnumeration().ToList();
-        //            int idx = matcher.Pos;
-        //            var brInstr = instrs[idx + 7];
-        //            if (brInstr.opcode != OpCodes.Br && brInstr.opcode != OpCodes.Br_S)
-        //                throw new Exception("Expected branch instruction at position " + (idx + 7) + " but found " + brInstr);
-
-        //            var continuationLabel = (Label)brInstr.operand;
-
-        //            matcher
-        //                .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))
-        //                .InsertAndAdvance(new CodeInstruction(
-        //                    OpCodes.Call,
-        //                    AccessTools.Method(typeof(LootRestriction), nameof(LootRestriction.CheckAllowed), new[] { typeof(RaycastHit) })
-        //                    ))
-        //                .InsertAndAdvance(new CodeInstruction(OpCodes.Brtrue, allowedLabel))
-        //                .InsertAndAdvance(new CodeInstruction(OpCodes.Ldstr, "That loot isn't yours!"))
-        //                .InsertAndAdvance(new CodeInstruction(
-        //                    OpCodes.Call,
-        //                    AccessTools.Method(typeof(UpdateSocialLog), nameof(UpdateSocialLog.LogAdd), new[] { typeof(string) })
-        //                    ))
-        //                .InsertAndAdvance(new CodeInstruction(OpCodes.Br_S, continuationLabel));
-
-        //        }
-
-        //        if (matcher.MatchEndForward(
-        //            new CodeMatch(OpCodes.Brfalse),
-        //            new CodeMatch(OpCodes.Ldarg_0),
-        //            new CodeMatch(OpCodes.Call),
-        //            new CodeMatch(OpCodes.Callvirt),
-        //            new CodeMatch(OpCodes.Ldloc_3),
-        //            new CodeMatch(OpCodes.Callvirt),
-        //            new CodeMatch(OpCodes.Callvirt),
-        //            new CodeMatch(OpCodes.Call),
-        //            new CodeMatch(OpCodes.Ldc_R4),
-        //            new CodeMatch(OpCodes.Bge_Un),
-        //            new CodeMatch(OpCodes.Ldloc_3)).IsValid)
-        //        {
-        //            var allowedLabel = il.DefineLabel();
-        //            matcher.Instruction.labels.Add(allowedLabel);
-
-        //            var instrs = matcher.InstructionEnumeration().ToList();
-        //            int idx = matcher.Pos;
-        //            var brInstr = instrs[idx + 3];
-        //            if (brInstr.opcode != OpCodes.Br && brInstr.opcode != OpCodes.Br_S)
-        //                throw new Exception("Expected branch instruction at position " + (idx + 3) + " but found " + brInstr);
-
-        //            var continuationLabel = (Label)brInstr.operand;
-
-        //            matcher
-        //                .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))
-        //                .InsertAndAdvance(new CodeInstruction(
-        //                    OpCodes.Call,
-        //                    AccessTools.Method(typeof(LootRestriction), nameof(LootRestriction.CheckAllowed), new[] { typeof(RaycastHit) })
-        //                    ))
-        //                .InsertAndAdvance(new CodeInstruction(OpCodes.Brtrue, allowedLabel))
-        //                .InsertAndAdvance(new CodeInstruction(OpCodes.Ldstr, "That loot isn't yours!"))
-        //                .InsertAndAdvance(new CodeInstruction(
-        //                    OpCodes.Call,
-        //                    AccessTools.Method(typeof(UpdateSocialLog), nameof(UpdateSocialLog.LogAdd), new[] { typeof(string) })
-        //                    ))
-        //                .InsertAndAdvance(new CodeInstruction(OpCodes.Br_S, continuationLabel));
-        //        }
-
-        //        TranspilerUtils.FixLeaveNops(matcher);
-
-        //        return matcher.InstructionEnumeration();
-        //    }
-        //}
-
-        //public static bool CheckAllowed(RaycastHit hit)
-        //{
-        //    var go = hit.transform.gameObject;
-        //    if (go == null)
-        //        return false;
-
-        //    //Logger.LogDebug(
-        //    //    $"CheckAllowed called on GameObject: '{go.name}' " +
-        //    //    $"(tag: {go.tag}, layer: {go.layer}, components: {string.Join(", ", go.GetComponents<Component>().Select(c => c.GetType().Name))})"
-        //    //    );
-
-        //    var character = go.GetComponent<Character>();
-        //    if (character == null )
-        //        return false;
-
-        //    var extra = Character_Extension.GetExtra(character);
-
-        //    return extra;
-        //}
     }
 }
