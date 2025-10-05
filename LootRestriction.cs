@@ -21,7 +21,7 @@ namespace Erenshor_LootRestriction
         internal const string Author = "Brad522";
         private const string ModGUID = Author + "." + ModName;
 
-        public static readonly ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(ModName);
+        //public static readonly ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(ModName);
 
         private readonly Harmony harmony = new Harmony(ModGUID);
 
@@ -61,8 +61,6 @@ namespace Erenshor_LootRestriction
                             OpCodes.Call,
                             AccessTools.Method(typeof(Character_Extension), nameof(Character_Extension.SetExtra), new[] { typeof(bool), typeof(Character) })
                         ));
-
-                    Logger.LogDebug("DoDeath: Inserted Dup and Stloc for local");
                 }
 
                 TranspilerUtils.FixLeaveNops(matcher);
@@ -88,45 +86,32 @@ namespace Erenshor_LootRestriction
                 => extraData.TryGetValue(instance, out var h) && h.PlayerInvolved;
         }
 
-        [HarmonyPatch(typeof(RotChest))]
-        [HarmonyPatch("FixedUpdate")]
-        public static class RotChestPatch
-        {
-            public static bool Prefix(RotChest __instance)
-            {
-                Logger.LogDebug("RotChestPrefix called");
-                var go = __instance.gameObject;
-                if (go == null)
-                {
-                    Logger.LogDebug("RotChestPrefix called on NULL object");
-                    return true;
-                }
+        //[HarmonyPatch(typeof(RotChest))]
+        //[HarmonyPatch("FixedUpdate")]
+        //public static class RotChestPatch
+        //{
+        //    public static bool Prefix(RotChest __instance)
+        //    {
+        //        var go = __instance.gameObject;
+        //        if (go == null)
+        //            return true;
 
-                var character = go.GetComponent<Character>() ?? go.GetComponentInParent<Character>();
+        //        var character = go.GetComponent<Character>() ?? go.GetComponentInParent<Character>();
 
-                if (character != null)
-                {
-                    if (!Character_Extension.GetExtra(character))
-                    {
-                        Logger.LogDebug($"RotChestPrefix: Destroying corpse of '{go.name}' because PlayerInvolved = false");
-                        var baseGO = Traverse.Create(__instance).Property<GameObject>("gameObject").Value;
-                        if (baseGO == null)
-                        {
-                            Logger.LogDebug("RotChestPrefix: baseGO is NULL");
-                            return true;
-                        }
-                        CorpseDataManager.RemoveCorpseData(character.savedCorpse);
-                        Object.Destroy(baseGO);
-                        return false;
-                    }
-                    Logger.LogDebug("RotChestPrefix: Not destroying corpse because PlayerInvolved = true");
-                    return true;
-                }
+        //        if (character != null)
+        //        {
+        //            if (!Character_Extension.GetExtra(character))
+        //            {
+        //                CorpseDataManager.RemoveCorpseData(character.savedCorpse);
+        //                Object.Destroy(go);
+        //                return false;
+        //            }
+        //            return true;
+        //        }
 
-                Logger.LogDebug("RotChestPrefix: No Character component found, allowing normal behavior");
-                return true;
-            }
-        }
+        //        return true;
+        //    }
+        //}
 
         [HarmonyPatch(typeof(NPC))]
         [HarmonyPatch("Update")]
@@ -214,15 +199,8 @@ namespace Erenshor_LootRestriction
                             OpCodes.Call,
                             AccessTools.Method(typeof(UpdateSocialLog), nameof(UpdateSocialLog.LogAdd), new[] { typeof(string) })
                             ))
-                        .InsertAndAdvance(new CodeInstruction(OpCodes.Br_S, continuationLabel))
-                        .Advance(7)
-                        .InsertAndAdvance(new CodeInstruction(OpCodes.Ldstr, "(LR DEBUG) Ok, you can loot that."))
-                        .InsertAndAdvance(new CodeInstruction(
-                            OpCodes.Call,
-                            AccessTools.Method(typeof(UpdateSocialLog), nameof(UpdateSocialLog.LogAdd), new[] { typeof(string) })
-                            ));
+                        .InsertAndAdvance(new CodeInstruction(OpCodes.Br_S, continuationLabel));
 
-                    Logger.LogDebug("RightClick: Inserted CheckAllowed call and conditional branch to prevent looting if not allowed");
                 }
 
                 if (matcher.MatchEndForward(
@@ -261,13 +239,7 @@ namespace Erenshor_LootRestriction
                             OpCodes.Call,
                             AccessTools.Method(typeof(UpdateSocialLog), nameof(UpdateSocialLog.LogAdd), new[] { typeof(string) })
                             ))
-                        .InsertAndAdvance(new CodeInstruction(OpCodes.Br_S, continuationLabel))
-                        .Advance(3)
-                        .InsertAndAdvance(new CodeInstruction(OpCodes.Ldstr, "(LR DEBUG) Ok, you can loot that."))
-                        .InsertAndAdvance(new CodeInstruction(
-                            OpCodes.Call,
-                            AccessTools.Method(typeof(UpdateSocialLog), nameof(UpdateSocialLog.LogAdd), new[] { typeof(string) })
-                            ));
+                        .InsertAndAdvance(new CodeInstruction(OpCodes.Br_S, continuationLabel));
                 }
 
                 TranspilerUtils.FixLeaveNops(matcher);
@@ -280,26 +252,19 @@ namespace Erenshor_LootRestriction
         {
             var go = hit.transform.gameObject;
             if (go == null)
-            {
-                Logger.LogDebug("CheckAllowed called on NULL object");
                 return false;
-            }
 
-            Logger.LogDebug(
-                $"CheckAllowed called on GameObject: '{go.name}' " +
-                $"(tag: {go.tag}, layer: {go.layer}, components: {string.Join(", ", go.GetComponents<Component>().Select(c => c.GetType().Name))})"
-                );
+            //Logger.LogDebug(
+            //    $"CheckAllowed called on GameObject: '{go.name}' " +
+            //    $"(tag: {go.tag}, layer: {go.layer}, components: {string.Join(", ", go.GetComponents<Component>().Select(c => c.GetType().Name))})"
+            //    );
 
             var character = go.GetComponent<Character>();
             if (character == null )
-            {
-                Logger.LogDebug($"No Character component on '{go.name}'");
                 return false;
-            }
 
             var extra = Character_Extension.GetExtra(character);
 
-            Logger.LogDebug($"Character_Extension found, PlayerInvolved = {extra}");
             return extra;
         }
     }
