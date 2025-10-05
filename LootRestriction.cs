@@ -15,7 +15,7 @@ namespace Erenshor_LootRestriction
     [BepInPlugin(ModGUID, ModDescription, ModVersion)]
     public class LootRestriction : BaseUnityPlugin
     {
-        internal const string ModName = "LootRestriction (Auto-Remove Corpses)";
+        internal const string ModName = "LootRestrictionAutoRemove";
         internal const string ModVersion = "1.0.0";
         internal const string ModDescription = "Loot Restriction Auto-Remove Corpses";
         internal const string Author = "Brad522";
